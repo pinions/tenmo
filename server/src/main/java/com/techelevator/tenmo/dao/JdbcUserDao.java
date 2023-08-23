@@ -67,10 +67,22 @@ public class JdbcUserDao implements UserDao {
             return false;
         }
 
-        // TODO: Create the account record with initial balance
+        //verify below works when running endpoint through postman
+
+        sql = "INSERT INTO account (user_id, balance) VALUES (?, ?) RETURNING account_id";
+        BigDecimal balance = new BigDecimal(1000);
+        try {
+            jdbcTemplate.queryForObject(sql, Integer.class, newUserId, balance);
+        } catch (DataAccessException e) {
+            return false;
+        }
 
         return true;
     }
+
+//    public boolean createAccountWhenRegistered(String username, String password) {
+//
+//    }
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
