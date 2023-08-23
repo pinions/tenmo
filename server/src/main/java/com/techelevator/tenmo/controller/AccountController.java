@@ -39,6 +39,6 @@ public class AccountController {
     @RequestMapping(path = "/userlist", method = RequestMethod.GET)
     public List<String> getListOfUsers(Principal principal) {
         int userId = userDao.findIdByUsername(principal.getName());
-        return jdbcUserDao.findOtherUsernames(userId);
+        return userDao.findOtherUsernames(userId);
     }
 }
