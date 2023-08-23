@@ -70,7 +70,7 @@ public class JdbcUserDao implements UserDao {
         //verify below works when running endpoint through postman
 
         sql = "INSERT INTO account (user_id, balance) VALUES (?, ?) RETURNING account_id";
-        BigDecimal balance = new BigDecimal(1000);
+        double balance = 1000;
         try {
             jdbcTemplate.queryForObject(sql, Integer.class, newUserId, balance);
         } catch (DataAccessException e) {

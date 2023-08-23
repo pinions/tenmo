@@ -1,5 +1,9 @@
 package com.techelevator.tenmo.controller;
 
+import com.techelevator.tenmo.dao.AccountDao;
+import com.techelevator.tenmo.dao.JdbcAccountDao;
+import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.UserAccount;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,19 +19,19 @@ import java.security.Principal;
 @RestController
 public class AccountController {
 
-    private UserDao userDao;
-    private final TokenProvider tokenProvider;
+    private final AccountDao accountDao;
+    private AuthenticationController authenticationController;
 
-    public AccountController(UserDao userDao, TokenProvider tokenProvider) {
+    private final UserDao userDao;
+
+    public AccountController(UserDao userDao, AccountDao accountDao) {
+        this.accountDao = accountDao;
         this.userDao = userDao;
-        this.tokenProvider = tokenProvider;
     }
 
     @RequestMapping(path = "/accountbalance", method = RequestMethod.GET)
-    public double getAccountBalance(Principal principal) {
-
-        //let's get some lunch, when we come back we're looking to make a new DAO to access the balance or something like that
-
-        return 1; //return userObject(username, balance);
+    public UserAccount getUserAccountNameAndBalance(Principal principal) {
+        int userid = userDao.findIdByUsername(principal.getName());
+        return accountDao.getAccountBalance(userid);
     }
 }
