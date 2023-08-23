@@ -2,6 +2,7 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
+import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserAccount;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,14 +15,14 @@ import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 import java.security.Principal;
+import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
 
     private final AccountDao accountDao;
-    private AuthenticationController authenticationController;
-
+    private JdbcUserDao jdbcUserDao;
     private final UserDao userDao;
 
     public AccountController(UserDao userDao, AccountDao accountDao) {
@@ -33,5 +34,11 @@ public class AccountController {
     public UserAccount getUserAccountNameAndBalance(Principal principal) {
         int userid = userDao.findIdByUsername(principal.getName());
         return accountDao.getAccountBalance(userid);
+    }
+
+    @RequestMapping(path = "/userlist", method = RequestMethod.GET)
+    public List<String> getListOfUsers(Principal principal) {
+        int userId = userDao.findIdByUsername(principal.getName());
+        return jdbcUserDao.findOtherUsernames(userId);
     }
 }
