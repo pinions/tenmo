@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserAccount;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
@@ -11,5 +12,7 @@ import java.security.Principal;
 public interface AccountDao {
 
     UserAccount getAccountBalance(int id);
+    Transfer transferBucks(int senderId, int receiverId, Double transferAmount);
 
 }
+

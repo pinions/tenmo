@@ -33,6 +33,17 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public String findUsernameById(int id) {
+        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?;";
+        String username = jdbcTemplate.queryForObject(sql, String.class, id);
+        if (id != 0) {
+            return username;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user;";
@@ -106,3 +117,4 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 }
+

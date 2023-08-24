@@ -42,7 +42,7 @@ CREATE TABLE transfer (
 	transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
 	sender_id int NOT NULL,
 	transfer_amount int NOT NULL,
-	reveiver_id int NOT NULL,
+	receiver_id int NOT NULL,
 	CONSTRAINT PK_transfer_id PRIMARY KEY (transfer_id),
 	CONSTRAINT FK_sender_id FOREIGN KEY (sender_id) REFERENCES tenmo_user (user_id)
 );										 
