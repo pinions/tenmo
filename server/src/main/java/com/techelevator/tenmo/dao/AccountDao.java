@@ -11,8 +11,13 @@ import java.security.Principal;
 @Component
 public interface AccountDao {
 
+    UserAccount getAccountBalance(String username);
+
     UserAccount getAccountBalance(int id);
     Transfer transferBucks(int senderId, int receiverId, Double transferAmount);
     boolean isApproved(int senderId, int receiverId, Double transferAmount);
+
+    Transfer transferBucks(Double transferAmount, String senderUsername, String receiverUsername);
+
 }
 

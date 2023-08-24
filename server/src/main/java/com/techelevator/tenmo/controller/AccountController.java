@@ -45,14 +45,10 @@ public class AccountController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer transfer(@Valid @RequestBody TransferDTO newTransfer) {
+    public Transfer transfer(@Valid @RequestBody TransferDTO newTransfer, Principal principal) {
+        String senderUsername = principal.getName();
 
-
-
-        int senderId = userDao.findIdByUsername(principal.getName());
-        int receiverId = userDao.findIdByUsername(username);
-
-        return accountDao.transferBucks(senderId, receiverId, transferAmount);
+        return accountDao.transferBucks(newTransfer.getTransferAmount(), senderUsername, newTransfer.getReceiverUsername());
     }
 }
 
