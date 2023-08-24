@@ -49,4 +49,3 @@ public class Transfer {
         this.transferId = transferId;
     }
 }
-
