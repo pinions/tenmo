@@ -43,15 +43,14 @@ public class AccountController {
         return userDao.findOtherUsernames(userId);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer transfer(@Valid @RequestBody TransferDTO newTransfer, Principal principal) {
+    @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
+    public Transfer transfer(Principal principal, @Valid @RequestBody Transfer transfer) {
 
         String senderUsername = principal.getName();
-        double transferAmount = newTransfer.getTransferAmount();
-        String receiverUsername = newTransfer.getReceiverUsername();
+        double transferAmount = transfer.getTransferAmount();
+        String receiverUsername = transfer.getReceiverUsername();
 
-        return accountDao.transferBucks(transferAmount, senderUsername, receiverUsername);
+        return accountDao.transferBucks(transfer);
     }
 }
 
