@@ -44,9 +44,9 @@ public class JdbcAccountDao implements AccountDao {
             jdbcTemplate.queryForRowSet(sql, senderBalance - transferAmount, senderId);
             jdbcTemplate.queryForRowSet(sql, getAccountBalance(receiverId).getBalance() + transferAmount);
 
-            String sqlTransfer = "INSERT INTO transfers (sender_id, receiver_id, amount, timestamp)" +
+            String sqlTransfer = "INSERT INTO transfers (sender_id, receiver_id, amount)" +
                     "VALUES (?, ?, ?, ?)";
-            transfer = jdbcTemplate.queryForRowSet(sqlTransfer, senderId, receiverId, transferAmount, LocalDate.now());
+            transfer = jdbcTemplate.queryForRowSet(sqlTransfer, Integer.class, senderId, receiverId, transferAmount);
             System.out.println("You transferred $" + transferAmount + " to " + userDao.findUsernameById(receiverId) + ".");
         } else {
             approved = false;
@@ -68,9 +68,9 @@ public class JdbcAccountDao implements AccountDao {
     private Transfer mapRowToTransfer (SqlRowSet results) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(results.getInt("transfer_id"));
-        transfer.setTransferAmount(results.getDouble("transfer_amount"));
         transfer.setSenderId(results.getInt("sender_id"));
         transfer.setReceiverId(results.getInt("receiver_id"));
+        transfer.setTransferAmount(results.getDouble("transfer_amount"));
         return transfer;
     }
 
