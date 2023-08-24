@@ -13,6 +13,6 @@ public interface AccountDao {
 
     UserAccount getAccountBalance(int id);
     Transfer transferBucks(int senderId, int receiverId, Double transferAmount);
-
+    boolean isApproved(int senderId, int receiverId, Double transferAmount);
 }
 

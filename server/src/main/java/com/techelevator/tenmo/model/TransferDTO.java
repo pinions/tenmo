@@ -5,16 +5,38 @@ import javax.validation.constraints.NotEmpty;
 public class TransferDTO {
 
     @NotEmpty
-    private String username;
+    private String transferId;
+
+    @NotEmpty
+    private String senderUsername;
+
+    @NotEmpty
+    private String receiverUsername;
 
     @NotEmpty Double transferAmount;
 
-    public String getUsername() {
-        return username;
+    public String getTransferId() {
+        return transferId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setTransferId(String transferId) {
+        this.transferId = transferId;
+    }
+
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    public void setReceiverUsername(String receiverUsername) {
+        this.receiverUsername = receiverUsername;
     }
 
     public Double getTransferAmount() {
@@ -23,5 +45,15 @@ public class TransferDTO {
 
     public void setTransferAmount(Double transferAmount) {
         this.transferAmount = transferAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDTO{" +
+                "transferId='" + transferId + '\'' +
+                ", transferAmount='" + transferAmount + '\'' +
+                ", from='" + senderUsername + '\'' +
+                ", to='" + receiverUsername + '\'' +
+                '}';
     }
 }

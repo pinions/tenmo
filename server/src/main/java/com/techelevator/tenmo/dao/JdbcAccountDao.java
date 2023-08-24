@@ -35,8 +35,20 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public Transfer transferBucks(int senderId, int receiverId, Double transferAmount) {
+    public boolean isApproved(int senderId, int receiverId, Double transferAmount) {
         boolean approved = true;
+        double senderBalance = getAccountBalance(senderId).getBalance();
+        if (senderBalance > 0 && transferAmount <= senderBalance && senderId != receiverId) {
+            transferBucks(senderId, receiverId, transferAmount);
+        } else {
+            approved = false;
+            System.out.println("Please choose a valid transfer amount." );
+        }
+        return approved;
+    }
+
+    @Override
+    public Transfer transferBucks(int senderId, int receiverId, Double transferAmount) {
         SqlRowSet transfer = null;
         double senderBalance = getAccountBalance(senderId).getBalance();
         if (senderBalance > 0 && transferAmount <= senderBalance && senderId != receiverId) {
@@ -48,9 +60,6 @@ public class JdbcAccountDao implements AccountDao {
                     "VALUES (?, ?, ?, ?)";
             transfer = jdbcTemplate.queryForRowSet(sqlTransfer, Integer.class, senderId, receiverId, transferAmount);
             System.out.println("You transferred $" + transferAmount + " to " + userDao.findUsernameById(receiverId) + ".");
-        } else {
-            approved = false;
-            System.out.println("Please choose a valid transfer amount." );
         }
         if (transfer.next()) {
             return mapRowToTransfer(transfer);
