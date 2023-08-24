@@ -7,7 +7,7 @@ public class Transfer {
     private int transferId;
     private String senderUsername;
     private String receiverUsername;
-    private Double transferAmount;
+    private double transferAmount;
 
     public Transfer() {};
 
@@ -46,7 +46,7 @@ public class Transfer {
         return transferAmount;
     }
 
-    public void setTransferAmount(Double transferAmount) {
+    public void setTransferAmount(double transferAmount) {
         this.transferAmount = transferAmount;
     }
 }

@@ -33,8 +33,8 @@ public class AccountController {
 
     @RequestMapping(path = "/accountbalance", method = RequestMethod.GET)
     public UserAccount getUserAccountNameAndBalance(Principal principal) {
-        int userid = userDao.findIdByUsername(principal.getName());
-        return accountDao.getAccountBalance(userid);
+        String username = principal.getName();
+        return accountDao.getAccountBalance(username);
     }
 
     @RequestMapping(path = "/userlist", method = RequestMethod.GET)
@@ -46,9 +46,12 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer transfer(@Valid @RequestBody TransferDTO newTransfer, Principal principal) {
-        String senderUsername = principal.getName();
 
-        return accountDao.transferBucks(newTransfer.getTransferAmount(), senderUsername, newTransfer.getReceiverUsername());
+        String senderUsername = principal.getName();
+        double transferAmount = newTransfer.getTransferAmount();
+        String receiverUsername = newTransfer.getReceiverUsername();
+
+        return accountDao.transferBucks(transferAmount, senderUsername, receiverUsername);
     }
 }
 

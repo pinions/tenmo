@@ -1,13 +1,12 @@
 package com.techelevator.tenmo.model;
 
 
-
 public class TransferDTO {
 
 
     private String receiverUsername;
 
-    Double transferAmount;
+    private double transferAmount;
 
     public String getReceiverUsername() {
         return receiverUsername;
@@ -17,11 +16,11 @@ public class TransferDTO {
         this.receiverUsername = receiverUsername;
     }
 
-    public Double getTransferAmount() {
+    public double getTransferAmount() {
         return transferAmount;
     }
 
-    public void setTransferAmount(Double transferAmount) {
+    public void setTransferAmount(double transferAmount) {
         this.transferAmount = transferAmount;
     }
 }

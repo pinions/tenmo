@@ -19,12 +19,10 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public UserAccount getAccountBalance(String username) {
-        String sql = "SELECT user_id, username, balance\n" +
+        String sql = "SELECT username, balance\n" +
                 "FROM tenmo_user\n" +
                 "JOIN account ON tenmo_user.user_id = account.user_id\n" +
                 "WHERE tenmo_user.username = ?;";
-
-        //we need to change this to get the balance correctly
 
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
@@ -32,21 +30,6 @@ public class JdbcAccountDao implements AccountDao {
             return mapRowToUser(results);
         }
         throw new UsernameNotFoundException("Username not found");
-    }
-
-    @Override
-    public UserAccount getAccountBalance(int id) {
-        return null;
-    }
-
-    @Override
-    public Transfer transferBucks(int senderId, int receiverId, Double transferAmount) {
-        return null;
-    }
-
-    @Override
-    public boolean isApproved(int senderId, int receiverId, Double transferAmount) {
-        return false;
     }
 
 //    @Override
@@ -83,22 +66,26 @@ public class JdbcAccountDao implements AccountDao {
 //    }
 
     @Override
-    public Transfer transferBucks(Double transferAmount, String senderUsername, String receiverUsername) {
+    public Transfer transferBucks(double transferAmount, String senderUsername, String receiverUsername) {
 
         SqlRowSet transfer = null;
-        Double senderBalance = getAccountBalance(senderUsername).getBalance();
+        double senderBalance = getAccountBalance(senderUsername).getBalance();
+        double receiverBalance = getAccountBalance(receiverUsername).getBalance();
+        int senderId = userDao.findIdByUsername(senderUsername);
+        int receiverId = userDao.findIdByUsername(receiverUsername);
 
         if (senderBalance > 0 && transferAmount <= senderBalance && !senderUsername.equals(receiverUsername)) {
             String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
-            jdbcTemplate.queryForRowSet(sql, senderBalance - transferAmount, senderUsername);
-            jdbcTemplate.queryForRowSet(sql, getAccountBalance(Integer.parseInt(receiverUsername)).getBalance() + transferAmount);
+            jdbcTemplate.queryForRowSet(sql, senderBalance - transferAmount, senderId);
+            jdbcTemplate.queryForRowSet(sql, receiverBalance + transferAmount, receiverId);
 
             String sqlTransfer = "INSERT INTO transfers (transfer_amount, sender_username, receiver_username)" +
-                    "VALUES (?, ?, ?,)";
+                    "VALUES (?, ?, ?)";
             transfer = jdbcTemplate.queryForRowSet(sqlTransfer, Integer.class, transferAmount, senderUsername, receiverUsername);
             System.out.println("You transferred $" + transferAmount + " to " + receiverUsername + ".");
         }
 
+        assert transfer != null;
         if (transfer.next()) {
             return mapRowToTransfer(transfer);
         }
@@ -119,9 +106,9 @@ public class JdbcAccountDao implements AccountDao {
     private Transfer mapRowToTransfer (SqlRowSet results) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(results.getInt("transfer_id"));
+        transfer.setTransferAmount(results.getDouble("transfer_amount"));
         transfer.setSenderUsername(results.getString("sender_username"));
         transfer.setReceiverUsername(results.getString("receiver_username"));
-        transfer.setTransferAmount(results.getDouble("transfer_amount"));
         return transfer;
     }
 
