@@ -1,24 +1,19 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.controller.AuthenticationController;
-import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
-import com.techelevator.tenmo.security.jwt.TokenProvider;
-import org.springframework.cglib.core.Local;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.security.Principal;
 import java.time.LocalDate;
 
 @Component
 public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
-    private JdbcUserDao jdbcUserDao;
+    private UserDao userDao;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -39,8 +34,10 @@ public class JdbcAccountDao implements AccountDao {
         throw new UsernameNotFoundException("Username not found");
     }
 
-    public boolean transferBucks(int senderId, int receiverId, double transferAmount) {
+    @Override
+    public Transfer transferBucks(int senderId, int receiverId, Double transferAmount) {
         boolean approved = true;
+        SqlRowSet transfer = null;
         double senderBalance = getAccountBalance(senderId).getBalance();
         if (senderBalance > 0 && transferAmount <= senderBalance && senderId != receiverId) {
             String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
@@ -49,13 +46,16 @@ public class JdbcAccountDao implements AccountDao {
 
             String sqlTransfer = "INSERT INTO transfers (sender_id, receiver_id, amount, timestamp)" +
                     "VALUES (?, ?, ?, ?)";
-            jdbcTemplate.queryForRowSet(sqlTransfer, senderId, receiverId, transferAmount, LocalDate.now());
-            System.out.println("You transferred $" + transferAmount + " to " + jdbcUserDao.findUsernameById(receiverId) + ".");
+            transfer = jdbcTemplate.queryForRowSet(sqlTransfer, senderId, receiverId, transferAmount, LocalDate.now());
+            System.out.println("You transferred $" + transferAmount + " to " + userDao.findUsernameById(receiverId) + ".");
         } else {
             approved = false;
             System.out.println("Please choose a valid transfer amount." );
         }
-        return approved;
+        if (transfer.next()) {
+            return mapRowToTransfer(transfer);
+        }
+        throw new UsernameNotFoundException("Username not found");
     }
 
     private UserAccount mapRowToUser (SqlRowSet results) {
@@ -63,6 +63,15 @@ public class JdbcAccountDao implements AccountDao {
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));
         return userAccount;
+    }
+
+    private Transfer mapRowToTransfer (SqlRowSet results) {
+        Transfer transfer = new Transfer();
+        transfer.setTransferId(results.getInt("transfer_id"));
+        transfer.setTransferAmount(results.getDouble("transfer_amount"));
+        transfer.setSenderId(results.getInt("sender_id"));
+        transfer.setReceiverId(results.getInt("receiver_id"));
+        return transfer;
     }
 
 }
