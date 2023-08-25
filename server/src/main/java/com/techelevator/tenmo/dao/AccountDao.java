@@ -12,7 +12,8 @@ import java.security.Principal;
 public interface AccountDao {
 
     UserAccount getAccountBalance(String username);
-    Transfer transferBucks(double transferAmount, String senderUsername, String receiverUsername);
+    Transfer transferBucks(Transfer transfer);
 
 }
+
 

@@ -1,9 +1,10 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface UserDao {
 
     List<User> findAll();

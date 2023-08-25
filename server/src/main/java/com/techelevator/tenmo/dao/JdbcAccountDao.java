@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JdbcAccountDao implements AccountDao {
 
+
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private UserDao userDao;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
@@ -66,37 +69,29 @@ public class JdbcAccountDao implements AccountDao {
 //    }
 
     @Override
-    public Transfer transferBucks(double transferAmount, String senderUsername, String receiverUsername) {
+    public Transfer transferBucks(Transfer transfer) {
+        double senderBalance = getAccountBalance(transfer.getSenderUsername()).getBalance();
+        double receiverBalance = getAccountBalance(transfer.getReceiverUsername()).getBalance();
+        int senderId = userDao.findIdByUsername(transfer.getSenderUsername());
+        int receiverId = userDao.findIdByUsername(transfer.getReceiverUsername());
 
-        SqlRowSet transfer = null;
-        double senderBalance = getAccountBalance(senderUsername).getBalance();
-        double receiverBalance = getAccountBalance(receiverUsername).getBalance();
-        int senderId = userDao.findIdByUsername(senderUsername);
-        int receiverId = userDao.findIdByUsername(receiverUsername);
-
-        if (senderBalance > 0 && transferAmount <= senderBalance && !senderUsername.equals(receiverUsername)) {
+        if (senderBalance > 0 && transfer.getTransferAmount() <= senderBalance && !transfer.getSenderUsername().equals(transfer.getReceiverUsername())) {
             String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
-            jdbcTemplate.queryForRowSet(sql, senderBalance - transferAmount, senderId);
-            jdbcTemplate.queryForRowSet(sql, receiverBalance + transferAmount, receiverId);
+            jdbcTemplate.update(sql, senderBalance - transfer.getTransferAmount(), senderId);
+            jdbcTemplate.update(sql, receiverBalance + transfer.getTransferAmount(), receiverId);
 
-            String sqlTransfer = "INSERT INTO transfers (transfer_amount, sender_username, receiver_username)" +
+            String sqlTransfer = "INSERT INTO transfer (transfer_amount, sender_username, receiver_username)" +
                     "VALUES (?, ?, ?)";
-            transfer = jdbcTemplate.queryForRowSet(sqlTransfer, Integer.class, transferAmount, senderUsername, receiverUsername);
-            System.out.println("You transferred $" + transferAmount + " to " + receiverUsername + ".");
+            Integer transferId = jdbcTemplate.queryForObject(sqlTransfer, Integer.class, transfer.getTransferAmount(),
+                    transfer.getSenderUsername(), transfer.getReceiverUsername());
+            transfer.setTransferId(transferId);
+            System.out.println("You transferred $" + transfer.getTransferAmount() + " to " + transfer.getReceiverUsername() + ".");
         }
-
-        assert transfer != null;
-        if (transfer.next()) {
-            return mapRowToTransfer(transfer);
-        }
-
-        throw new UsernameNotFoundException("Username not found");
-
+        return transfer;
     }
 
 
-
-        private UserAccount mapRowToUser (SqlRowSet results) {
+    private UserAccount mapRowToUser (SqlRowSet results) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));
