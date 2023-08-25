@@ -23,6 +23,8 @@ public class JdbcAccountDao implements AccountDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
+
     @Override
     public UserAccount getAccountBalance(String username) {
         String sql = "SELECT username, balance\n" +
@@ -38,18 +40,7 @@ public class JdbcAccountDao implements AccountDao {
         throw new UsernameNotFoundException("Username not found");
     }
 
-//    @Override
-//    public boolean isApproved(int senderId, int receiverId, Double transferAmount) {
-//        boolean approved = true;
-//        double senderBalance = getAccountBalance(senderId).getBalance();
-//        if (senderBalance > 0 && transferAmount <= senderBalance && senderId != receiverId) {
-//            transferBucks(senderId, receiverId, transferAmount);
-//        } else {
-//            approved = false;
-//            System.out.println("Please choose a valid transfer amount." );
-//        }
-//        return approved;
-//    }
+
 
     @Override
     public Transfer transferBucks(Transfer transfer) {
@@ -73,6 +64,8 @@ public class JdbcAccountDao implements AccountDao {
         return transfer;
     }
 
+
+
     @Override
     public List<Transfer> findTransfers(int senderId) {
         List<Transfer> transfers = new ArrayList<>();
@@ -90,6 +83,8 @@ public class JdbcAccountDao implements AccountDao {
         return transfers;
     }
 
+
+
     public Transfer findTransferById(int transferId) {
         Transfer transfer = null;
         String sql = "SELECT transfer_id, transfer_amount, sender_username, receiver_username " +
@@ -105,12 +100,16 @@ public class JdbcAccountDao implements AccountDao {
         return transfer;
     }
 
+
+
     private UserAccount mapRowToUser (SqlRowSet results) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));
         return userAccount;
     }
+
+
 
     private Transfer mapRowToTransfer (SqlRowSet results) {
         Transfer transfer = new Transfer();
