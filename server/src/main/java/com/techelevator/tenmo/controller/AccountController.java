@@ -50,7 +50,7 @@ public class AccountController {
 
     @RequestMapping(path = "/mytransfers", method = RequestMethod.GET)
     public List<Transfer> getListOfTransfers(Principal principal) {
-        int senderId = accountDao.findTransferBySenderUsername(principal.getName());
+        int senderId = userDao.findIdByUsername(principal.getName());
         return accountDao.findTransfers(senderId);
     }
 

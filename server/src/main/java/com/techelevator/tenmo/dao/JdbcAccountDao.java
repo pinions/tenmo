@@ -98,7 +98,8 @@ public class JdbcAccountDao implements AccountDao {
     public List<Transfer> findTransfers(int senderId) {
         List<Transfer> transfers = new ArrayList<>();
         String senderUsername = userDao.findUsernameById(senderId);
-        String sql = "SELECT transfer_id FROM transfer WHERE sender_username ILIKE ? RETURNING transfer_id;";
+        String sql = "SELECT transfer_id, transfer_amount, sender_username, receiver_username " +
+                "FROM transfer WHERE sender_username ILIKE ?;";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, senderUsername);
             while (results.next()) {
@@ -108,17 +109,6 @@ public class JdbcAccountDao implements AccountDao {
             System.out.println("Unable to connect to server or database");
         }
         return transfers;
-    }
-
-    @Override
-    public int findTransferBySenderUsername(String username) {
-        String sql = "SELECT transfer_id FROM transfer WHERE sender_username ILIKE ?;";
-        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, username);
-        if (id != null) {
-            return id;
-        } else {
-            return -1;
-        }
     }
 
     private UserAccount mapRowToUser (SqlRowSet results) {

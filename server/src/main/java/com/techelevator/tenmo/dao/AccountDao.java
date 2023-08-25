@@ -16,7 +16,6 @@ public interface AccountDao {
     UserAccount getAccountBalance(String username);
     Transfer transferBucks(Transfer transfer);
     List<Transfer> findTransfers(int senderId);
-    int findTransferBySenderUsername(String username);
 
 }
 
