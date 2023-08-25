@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
     private static final User TEST_USER_1 = new User(1001, "user", "$2a$10$Ud8gSvRS4G1MijNgxXWzcexeXlVs4kWDOkjE7JFIkNLKEuE57JAEy", "ROLE_USER");
@@ -73,7 +74,6 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         User user2 = sut.findByUsername("nicholas");
         Assert.assertEquals("nicholas", user2.getUsername());
     }
->>>>>>> 8127e7a94df5a70528725f4ec016a9982a06a6c0
 
     private void assertUsersMatch(User expected, User actual) {
         Assert.assertEquals(expected.getId(), actual.getId());
