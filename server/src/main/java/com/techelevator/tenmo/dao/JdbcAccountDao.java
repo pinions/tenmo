@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class JdbcAccountDao implements AccountDao {
 
-
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private UserDao userDao;
@@ -81,7 +80,7 @@ public class JdbcAccountDao implements AccountDao {
             jdbcTemplate.update(sql, receiverBalance + transfer.getTransferAmount(), receiverId);
 
             String sqlTransfer = "INSERT INTO transfer (transfer_amount, sender_username, receiver_username)" +
-                    "VALUES (?, ?, ?)";
+                    "VALUES (?, ?, ?) RETURNING transfer_id;";
             Integer transferId = jdbcTemplate.queryForObject(sqlTransfer, Integer.class, transfer.getTransferAmount(),
                     transfer.getSenderUsername(), transfer.getReceiverUsername());
             transfer.setTransferId(transferId);
@@ -90,11 +89,7 @@ public class JdbcAccountDao implements AccountDao {
         return transfer;
     }
 
-
-
-
-
-        private UserAccount mapRowToUser (SqlRowSet results) {
+    private UserAccount mapRowToUser (SqlRowSet results) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));

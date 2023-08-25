@@ -1,19 +1,14 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
-import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferDTO;
-import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -52,4 +47,3 @@ public class AccountController {
         return accountDao.transferBucks(transfer);
     }
 }
-
