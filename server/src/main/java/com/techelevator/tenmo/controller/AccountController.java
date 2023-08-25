@@ -45,10 +45,10 @@ public class AccountController {
         int userId = userDao.findIdByUsername(principal.getName());
         return userDao.findOtherUsernames(userId);
     }
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer transfer(@Valid @RequestBody Transfer transfer, Principal principal) {
-
         return accountDao.transferBucks(transfer);
     }
 }

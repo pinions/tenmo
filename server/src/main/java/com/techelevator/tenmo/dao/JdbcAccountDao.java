@@ -91,7 +91,10 @@ public class JdbcAccountDao implements AccountDao {
     }
 
 
-    private UserAccount mapRowToUser (SqlRowSet results) {
+
+
+
+        private UserAccount mapRowToUser (SqlRowSet results) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));
