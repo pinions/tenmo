@@ -54,4 +54,9 @@ public class AccountController {
         return accountDao.findTransfers(senderId);
     }
 
+    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
+    public Transfer getTransferById(@PathVariable("id") int transferId) {
+        return accountDao.findTransferById(transferId);
+    }
+
 }

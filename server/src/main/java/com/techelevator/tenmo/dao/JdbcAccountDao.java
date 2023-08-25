@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 @Component
 public class JdbcAccountDao implements AccountDao {
@@ -109,6 +108,21 @@ public class JdbcAccountDao implements AccountDao {
             System.out.println("Unable to connect to server or database");
         }
         return transfers;
+    }
+
+    public Transfer findTransferById(int transferId) {
+        Transfer transfer = null;
+        String sql = "SELECT transfer_id, transfer_amount, sender_username, receiver_username " +
+                "FROM transfer WHERE transfer_id = ?;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+            while (results.next()) {
+                transfer = mapRowToTransfer(results);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Unable to connect to server or database");
+        }
+        return transfer;
     }
 
     private UserAccount mapRowToUser (SqlRowSet results) {
