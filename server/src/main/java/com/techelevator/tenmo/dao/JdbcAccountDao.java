@@ -3,10 +3,15 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.DataFormatException;
 
 @Component
 public class JdbcAccountDao implements AccountDao {
@@ -87,6 +92,33 @@ public class JdbcAccountDao implements AccountDao {
             System.out.println("You transferred $" + transfer.getTransferAmount() + " to " + transfer.getReceiverUsername() + ".");
         }
         return transfer;
+    }
+
+    @Override
+    public List<Transfer> findTransfers(int senderId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String senderUsername = userDao.findUsernameById(senderId);
+        String sql = "SELECT transfer_id FROM transfer WHERE sender_username ILIKE ? RETURNING transfer_id;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, senderUsername);
+            while (results.next()) {
+                transfers.add(mapRowToTransfer(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Unable to connect to server or database");
+        }
+        return transfers;
+    }
+
+    @Override
+    public int findTransferBySenderUsername(String username) {
+        String sql = "SELECT transfer_id FROM transfer WHERE sender_username ILIKE ?;";
+        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        if (id != null) {
+            return id;
+        } else {
+            return -1;
+        }
     }
 
     private UserAccount mapRowToUser (SqlRowSet results) {

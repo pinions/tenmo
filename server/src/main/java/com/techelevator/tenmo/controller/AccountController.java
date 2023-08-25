@@ -6,6 +6,7 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.tenmo.dao.UserDao;
@@ -14,7 +15,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
-//@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
     @Autowired
@@ -46,4 +47,11 @@ public class AccountController {
     public Transfer transfer(@Valid @RequestBody Transfer transfer, Principal principal) {
         return accountDao.transferBucks(transfer);
     }
+
+    @RequestMapping(path = "/mytransfers", method = RequestMethod.GET)
+    public List<Transfer> getListOfTransfers(Principal principal) {
+        int senderId = accountDao.findTransferBySenderUsername(principal.getName());
+        return accountDao.findTransfers(senderId);
+    }
+
 }

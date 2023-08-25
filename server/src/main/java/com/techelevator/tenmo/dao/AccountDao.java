@@ -8,11 +8,15 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
+
 @Component
 public interface AccountDao {
 
     UserAccount getAccountBalance(String username);
     Transfer transferBucks(Transfer transfer);
+    List<Transfer> findTransfers(int senderId);
+    int findTransferBySenderUsername(String username);
 
 }
 
