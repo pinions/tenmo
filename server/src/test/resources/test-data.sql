@@ -45,8 +45,6 @@ VALUES ('user', '$2a$10$Ud8gSvRS4G1MijNgxXWzcexeXlVs4kWDOkjE7JFIkNLKEuE57JAEy'),
        ('michel', '$2a$10$cwX3e7zclBT4SdYJ9680n.Rd7RCUcPW6Xr1VS3cABMAAs5RfpHg6m'),
        ('adam', '$2a$10$GcQkUuO33aRgqIxJzxRilO3JnoKEVHaDXYRMwbPTxGKGRLLBJ05Cu'),
        ('charles', '$2a$10$NakCoyQY3jSwMzmI4eVrAe0wlT0ogbgKq0LOvOZrsL5bbrML14qOi');
-<<<<<<< HEAD
-=======
 
 
 INSERT INTO account (user_id, balance)
@@ -59,47 +57,6 @@ VALUES (1001, 1000),
        (1007, 1000),
        (1008, 800),
        (1009, 70),
-       (1010, 1200);
-
-
-CREATE SEQUENCE seq_transfer_id
-INCREMENT BY 1
-START WITH 3001
-NO MAXVALUE;
-
-CREATE TABLE transfer (
-	transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
-	transfer_amount int NOT NULL,
-	sender_username varchar(50) NOT NULL,
-	receiver_username varchar(50) NOT NULL,
-	CONSTRAINT PK_transfer_id PRIMARY KEY (transfer_id),
-	CONSTRAINT FK_sender_username FOREIGN KEY (sender_username) REFERENCES tenmo_user (username)
-);
-
-
-INSERT INTO transfer (transfer_amount, sender_username, receiver_username)
-VALUES (1000, 'charles', 'nicholas'),
-       (500, 'nix', 'nicholas'),
-       (600, 'michel', 'zach'),
-       (900, 'viviana', 'zach'),
-       (50, 'adam', 'nicholas'),
-       (80, 'user', 'adam'),
-       (5, 'caroline', 'adam'),
-       (9, 'nicholas', 'nix');
->>>>>>> 444788bd523a23abe1aeeb3088949b18017a1052
-
-
-INSERT INTO account (user_id, balance)
-VALUES (1001, 1000),
-       (1002, 2000),
-       (1003, 400),
-       (1004, 599),
-       (1005, 5),
-       (1006, 50),
-       (1007, 1000),
-       (1008, 800),
-       (1009, 70),
-       (1010, 1200);
 
 
 CREATE SEQUENCE seq_transfer_id
