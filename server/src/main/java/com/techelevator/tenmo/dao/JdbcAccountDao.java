@@ -50,26 +50,6 @@ public class JdbcAccountDao implements AccountDao {
 //        }
 //        return approved;
 //    }
-//
-//    @Override
-//    public Transfer transferBucks(int senderId, int receiverId, Double transferAmount) {
-//        SqlRowSet transfer = null;
-//        double senderBalance = getAccountBalance(senderId).getBalance();
-//        if (senderBalance > 0 && transferAmount <= senderBalance && senderId != receiverId) {
-//            String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
-//            jdbcTemplate.queryForRowSet(sql, senderBalance - transferAmount, senderId);
-//            jdbcTemplate.queryForRowSet(sql, getAccountBalance(receiverId).getBalance() + transferAmount);
-//
-//            String sqlTransfer = "INSERT INTO transfers (sender_id, receiver_id, amount)" +
-//                    "VALUES (?, ?, ?, ?)";
-//            transfer = jdbcTemplate.queryForRowSet(sqlTransfer, Integer.class, senderId, receiverId, transferAmount);
-//            System.out.println("You transferred $" + transferAmount + " to " + userDao.findUsernameById(receiverId) + ".");
-//        }
-//        if (transfer.next()) {
-//            return mapRowToTransfer(transfer);
-//        }
-//        throw new UsernameNotFoundException("Username not found");
-//    }
 
     @Override
     public Transfer transferBucks(Transfer transfer) {

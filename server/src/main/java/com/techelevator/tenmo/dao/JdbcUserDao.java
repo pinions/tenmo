@@ -89,8 +89,6 @@ public class JdbcUserDao implements UserDao {
             return false;
         }
 
-        //verify below works when running endpoint through postman
-
         sql = "INSERT INTO account (user_id, balance) VALUES (?, ?) RETURNING account_id";
         double balance = 1000;
         try {
@@ -102,9 +100,6 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
-//    public boolean createAccountWhenRegistered(String username, String password) {
-//
-//    }
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
