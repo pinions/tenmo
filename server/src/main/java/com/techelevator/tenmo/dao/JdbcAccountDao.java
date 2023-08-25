@@ -63,13 +63,19 @@ public class JdbcAccountDao implements AccountDao {
             jdbcTemplate.update(sql, senderBalance - transfer.getTransferAmount(), senderId);
             jdbcTemplate.update(sql, receiverBalance + transfer.getTransferAmount(), receiverId);
 
-            String sqlTransfer = "INSERT INTO transfer (transfer_amount, sender_username, receiver_username)" +
-                    "VALUES (?, ?, ?) RETURNING transfer_id;";
-            Integer transferId = jdbcTemplate.queryForObject(sqlTransfer, Integer.class, transfer.getTransferAmount(),
-                    transfer.getSenderUsername(), transfer.getReceiverUsername());
-            transfer.setTransferId(transferId);
+            updateTransfer(transfer);
             System.out.println("You transferred $" + transfer.getTransferAmount() + " to " + transfer.getReceiverUsername() + ".");
         }
+        return transfer;
+    }
+
+    @Override
+    public Transfer updateTransfer(Transfer transfer) {
+        String sqlTransfer = "INSERT INTO transfer (transfer_amount, sender_username, receiver_username)" +
+                "VALUES (?, ?, ?) RETURNING transfer_id;";
+        Integer transferId = jdbcTemplate.queryForObject(sqlTransfer, Integer.class, transfer.getTransferAmount(),
+                transfer.getSenderUsername(), transfer.getReceiverUsername());
+        transfer.setTransferId(transferId);
         return transfer;
     }
 

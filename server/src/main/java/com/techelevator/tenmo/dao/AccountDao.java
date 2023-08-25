@@ -13,6 +13,7 @@ public interface AccountDao {
     Transfer transferBucks(Transfer transfer);
     List<Transfer> findTransfers(int senderId);
     Transfer findTransferById(int transferId);
+    Transfer updateTransfer(Transfer transfer);
 }
 
 
