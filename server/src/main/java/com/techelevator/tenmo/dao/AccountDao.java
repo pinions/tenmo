@@ -10,10 +10,15 @@ import java.util.List;
 public interface AccountDao {
 
     UserAccount getAccountBalance(String username);
+
     Transfer transferBucks(Transfer transfer);
+
     List<Transfer> findTransfers(int senderId);
+
     Transfer findTransferById(int transferId);
+
     Transfer updateTransfer(Transfer transfer);
+
 }
 
 
