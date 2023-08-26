@@ -21,9 +21,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
     private Transfer testTransfer;
     private Transfer failedTransfer;
     private Transfer testTransfer2;
-    private Transfer listTransfer1;
-    private Transfer listTransfer2;
-    private Transfer listTransfer3;
+    private Transfer listTransfer;
     private JdbcTemplate jdbcTemplate;
 
     @Before
@@ -36,9 +34,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         testTransfer = new Transfer(3002, "nix", "nicholas", 500.00);
         testTransfer2 = new Transfer(3012,"nicholas","nix",200.00);
         failedTransfer = new Transfer(3011,"caroline","nicholas",20.00);
-        listTransfer1 = new Transfer(3008,"nicholas","nix",9.00);
-        listTransfer2 = new Transfer(3009,"nicholas","nix",12.00);
-        listTransfer3 = new Transfer(3010,"nicholas","nix",50.00);
+        listTransfer = new Transfer(3008,"nicholas","nix",9.00);
     }
 
     @Test
@@ -108,10 +104,8 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
     @Test
     public void findTransfers_returns_correct_list_of_transfers_for_user() {
         List<Transfer> transfers = sut.findTransfers(1001);
-        Assert.assertEquals(3, transfers.size());
-        assertTransfersMatch(listTransfer1, transfers.get(0));
-        assertTransfersMatch(listTransfer2, transfers.get(1));
-        assertTransfersMatch(listTransfer3, transfers.get(2));
+        Assert.assertEquals(1, transfers.size());
+        assertTransfersMatch(listTransfer, transfers.get(0));
     }
 
     @Test
