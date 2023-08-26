@@ -83,6 +83,8 @@ VALUES (1000, 'charles', 'nicholas'),
        (80, 'user', 'adam'),
        (5, 'caroline', 'adam'),
        (9, 'nicholas', 'nix');
+       (12, 'nicholas', 'nix');
+       (50, 'nicholas', 'nix');
 
 
 COMMIT;
