@@ -50,7 +50,7 @@ VALUES ('user', '$2a$10$Ud8gSvRS4G1MijNgxXWzcexeXlVs4kWDOkjE7JFIkNLKEuE57JAEy'),
 INSERT INTO account (user_id, balance)
 VALUES (1001, 1000),
        (1002, 2000),
-       (1003, 400),
+       (1003, 600),
        (1004, 599),
        (1005, 5),
        (1006, 50),
