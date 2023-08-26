@@ -1,11 +1,14 @@
 package com.techelevator.dao;
 
 import com.techelevator.tenmo.dao.JdbcAccountDao;
+import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +19,6 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
     private UserAccount testUser1;
     private UserAccount testUser2;
     private Transfer testTransfer;
-    private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setup() {
@@ -37,7 +39,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void transferBucks_updates_balance_for_sender_and_receiver() {
-        double transferAmount = sut.transferBucks(testTransfer).getTransferAmount();
+        double transferAmount = testTransfer.getTransferAmount();
         double expectedTransferAmount = 500;
         double senderBalance = 0;
         double receiverBalance = 0;
