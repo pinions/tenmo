@@ -41,6 +41,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         failedTransfer2 = new Transfer(3013,"adam","viviana",-5.00);
         failedTransfer3 = new Transfer(3014,"caroline","nicholas",20.00);
         listTransfer = new Transfer(3008,"nicholas","nix",9.00);
+
     }
 
     @Test

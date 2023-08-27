@@ -2,7 +2,6 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -15,13 +14,13 @@ import java.util.List;
 @Component
 public class JdbcAccountDao implements AccountDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private UserDao userDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final UserDao userDao;
+
+
 
     // this constructor is here in the event that we only needed a jdbcTemplate somewhere else
-    public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+
 
     // this constructor has to take the userDao in order for the integration tests to work
     public JdbcAccountDao(UserDao userDao, JdbcTemplate jdbcTemplate) {

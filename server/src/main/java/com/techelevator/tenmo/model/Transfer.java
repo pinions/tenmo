@@ -9,7 +9,7 @@ public class Transfer {
     private String receiverUsername;
     private double transferAmount;
 
-    public Transfer() {};
+    public Transfer() {}
 
     public Transfer(int transferId, String senderUsername, String receiverUsername, Double transferAmount) {
         this.transferId = transferId;

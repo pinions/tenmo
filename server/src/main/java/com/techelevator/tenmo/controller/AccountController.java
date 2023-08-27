@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.tenmo.dao.UserDao;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -18,17 +19,20 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
-    @Autowired
+
+
     private final AccountDao accountDao;
-    @Autowired
+
     private JdbcUserDao jdbcUserDao;
-    @Autowired
+
     private final UserDao userDao;
 
     public AccountController(UserDao userDao, AccountDao accountDao) {
         this.accountDao = accountDao;
         this.userDao = userDao;
     }
+
+
 
     @RequestMapping(path = "/accountbalance", method = RequestMethod.GET)
     public UserAccount getUserAccountNameAndBalance(Principal principal) {
@@ -45,6 +49,10 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer transfer(@Valid @RequestBody Transfer transfer, Principal principal) {
+
+        if (transfer.getTransferAmount() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send a negative amount");
+        }
         return accountDao.transferBucks(transfer);
     }
 
