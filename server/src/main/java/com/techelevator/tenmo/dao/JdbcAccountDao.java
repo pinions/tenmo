@@ -18,10 +18,12 @@ public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
     private UserDao userDao;
 
+    // this constructor is here in the event that we only needed a jdbcTemplate somewhere else
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // this constructor has to take the userDao in order for the integration tests to work
     public JdbcAccountDao(UserDao userDao, JdbcTemplate jdbcTemplate) {
         this.userDao = userDao;
         this.jdbcTemplate = jdbcTemplate;
@@ -29,6 +31,9 @@ public class JdbcAccountDao implements AccountDao {
 
 
 
+
+    // getAccountBalance uses principal in the endpoint to find the signed-in user's balance
+    // the username parameter is the principal
     @Override
     public UserAccount getAccountBalance(String username) {
         String sql = "SELECT username, balance\n" +
@@ -45,7 +50,8 @@ public class JdbcAccountDao implements AccountDao {
     }
 
 
-
+    // transferBucks uses the jdbcTemplate to update the balances of the sender and receiver
+    // the usernames are found by the userDao
     @Override
     public Transfer transferBucks(Transfer transfer) {
         double senderBalance = getAccountBalance(transfer.getSenderUsername()).getBalance();
@@ -66,7 +72,7 @@ public class JdbcAccountDao implements AccountDao {
     }
 
 
-
+    // updateTransfer adds the transfer records into its own table in the database
     @Override
     public Transfer updateTransfer(Transfer transfer) {
         String sqlTransfer = "INSERT INTO transfer (transfer_amount, sender_username, receiver_username)" +
@@ -78,7 +84,8 @@ public class JdbcAccountDao implements AccountDao {
     }
 
 
-
+    // findTransfers uses Principal in the endpoint to only lookup transfer of the signed-in user
+    // .findUsernameById comes from the userDao, this could probably be reworked to take the username
     @Override
     public List<Transfer> findTransfers(int senderId) {
         List<Transfer> transfers = new ArrayList<>();
@@ -97,7 +104,7 @@ public class JdbcAccountDao implements AccountDao {
     }
 
 
-
+    //findTransferById also uses principal in the endpoint, but takes an additional parameter to find a specific transfer
     public Transfer findTransferById(int transferId) {
         Transfer transfer = null;
         String sql = "SELECT transfer_id, transfer_amount, sender_username, receiver_username " +
@@ -115,14 +122,17 @@ public class JdbcAccountDao implements AccountDao {
 
 
 
+
+
+
+    // methods to map properties to JSON objects
+
     private UserAccount mapRowToUser (SqlRowSet results) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(results.getString("username"));
         userAccount.setBalance(results.getDouble("balance"));
         return userAccount;
     }
-
-
 
     private Transfer mapRowToTransfer (SqlRowSet results) {
         Transfer transfer = new Transfer();

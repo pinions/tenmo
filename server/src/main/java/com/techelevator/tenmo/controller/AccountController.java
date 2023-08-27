@@ -53,7 +53,7 @@ public class AccountController {
         int senderId = userDao.findIdByUsername(principal.getName());
         return accountDao.findTransfers(senderId);
     }
-
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
     public Transfer getTransferById(@PathVariable("id") int transferId) {
         return accountDao.findTransferById(transferId);
