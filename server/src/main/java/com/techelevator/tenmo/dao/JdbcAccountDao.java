@@ -17,11 +17,6 @@ public class JdbcAccountDao implements AccountDao {
     private final JdbcTemplate jdbcTemplate;
     private final UserDao userDao;
 
-
-
-    // this constructor is here in the event that we only needed a jdbcTemplate somewhere else
-
-
     // this constructor has to take the userDao in order for the integration tests to work
     public JdbcAccountDao(UserDao userDao, JdbcTemplate jdbcTemplate) {
         this.userDao = userDao;

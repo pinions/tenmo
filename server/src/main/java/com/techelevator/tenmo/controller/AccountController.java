@@ -16,8 +16,9 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
-@PreAuthorize("isAuthenticated()")
+
 @RestController
+@PreAuthorize("isAuthenticated()")
 public class AccountController {
 
 
@@ -50,9 +51,10 @@ public class AccountController {
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer transfer(@Valid @RequestBody Transfer transfer, Principal principal) {
 
-        if (transfer.getTransferAmount() < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send a negative amount");
+        if (transfer.getTransferAmount() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send 0 or a negative amount");
         }
+
         return accountDao.transferBucks(transfer);
     }
 
