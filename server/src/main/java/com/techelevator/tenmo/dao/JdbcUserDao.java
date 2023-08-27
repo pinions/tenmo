@@ -20,7 +20,7 @@ public class JdbcUserDao implements UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //
+
     @Override
     public int findIdByUsername(String username) {
         String sql = "SELECT user_id FROM tenmo_user WHERE username ILIKE ?;";
@@ -55,6 +55,7 @@ public class JdbcUserDao implements UserDao {
         return users;
     }
 
+    //findOtherUsernames is made to find available recipients of a transfer
     @Override
     public List<String> findOtherUsernames(int id) {
         List<String> usernames = new ArrayList<>();
@@ -101,6 +102,7 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
+    // method to map user properties to a JSON object
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));
