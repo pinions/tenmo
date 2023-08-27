@@ -1,6 +1,8 @@
 package com.techelevator.dao;
 
 import com.techelevator.tenmo.dao.JdbcAccountDao;
+import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserAccount;
 import org.junit.Assert;
@@ -22,11 +24,13 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
     private Transfer testTransfer2;
     private Transfer listTransfer;
     private JdbcTemplate jdbcTemplate;
+    private UserDao userDao;
 
     @Before
     public void setup() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcAccountDao(jdbcTemplate);
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        userDao = new JdbcUserDao(jdbcTemplate);
+        sut = new JdbcAccountDao(userDao, jdbcTemplate);
 
         testUser = new UserAccount(1002, "nicholas");
         testTransfer = new Transfer(3002, "nix", "nicholas", 500.00);

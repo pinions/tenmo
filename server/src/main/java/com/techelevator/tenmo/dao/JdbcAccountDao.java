@@ -16,10 +16,14 @@ import java.util.List;
 public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private UserDao userDao;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public JdbcAccountDao(UserDao userDao, JdbcTemplate jdbcTemplate) {
+        this.userDao = userDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
