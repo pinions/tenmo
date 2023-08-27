@@ -16,8 +16,7 @@ import java.util.List;
 
 public class JdbcAccountDaoTests extends BaseDaoTests {
     private JdbcAccountDao sut;
-    private UserAccount testUser1;
-    private UserAccount testUser2;
+    private UserAccount testUser;
     private Transfer testTransfer;
     private Transfer failedTransfer;
     private Transfer testTransfer2;
@@ -29,8 +28,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         sut = new JdbcAccountDao(jdbcTemplate);
 
-        testUser1 = new UserAccount(1002, "nicholas");
-        testUser2 = new UserAccount(1003, "nix");
+        testUser = new UserAccount(1002, "nicholas");
         testTransfer = new Transfer(3002, "nix", "nicholas", 500.00);
         testTransfer2 = new Transfer(3012,"nicholas","nix",200.00);
         failedTransfer = new Transfer(3011,"caroline","nicholas",20.00);
@@ -39,7 +37,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void getAccountBalance_returns_correct_username_and_balance() {
-        double retrievedBalance = sut.getAccountBalance(testUser1.getUsername()).getBalance();
+        double retrievedBalance = sut.getAccountBalance(testUser.getUsername()).getBalance();
         double expectedBalance = 2000;
         Assert.assertEquals(retrievedBalance, expectedBalance, 0.001);
     }
@@ -122,7 +120,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     private void assertTransfersMatch(Transfer expected, Transfer actual) {
         Assert.assertEquals(expected.getTransferId(), actual.getTransferId());
-        Assert.assertEquals(expected.getTransferAmount(), actual.getTransferAmount());
+        Assert.assertEquals(expected.getTransferAmount(), actual.getTransferAmount(), 0.001);
         Assert.assertEquals(expected.getSenderUsername(), actual.getSenderUsername());
         Assert.assertEquals(expected.getReceiverUsername(), actual.getReceiverUsername());
     }

@@ -9,13 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-
 public class JdbcUserDaoTests extends BaseDaoTests {
     private static final User TEST_USER_1 = new User(1001, "user", "$2a$10$Ud8gSvRS4G1MijNgxXWzcexeXlVs4kWDOkjE7JFIkNLKEuE57JAEy", "ROLE_USER");
     private static final User TEST_USER_2 = new User(1002, "nicholas", "$2a$10$XYwSwRxxkUxGcsKyozcwEur5UXJ2nyXLki.BORll9jsGxZEcy3CXW", "ROLE_USER");
-    private static final User TEST_USER_3 = new User(1003, "nix", "$2a$10$7CcedCBqk9hvQAHO5CnmI.UkolotAD1yCXe.3PjFn/zGHUkLsLTre", "ROLE_USER");
-    private JdbcUserDao sut;
 
+    private JdbcUserDao sut;
 
     @Before
     public void setup() {
