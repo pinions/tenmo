@@ -53,7 +53,8 @@ public class JdbcAccountDao implements AccountDao {
         int senderId = userDao.findIdByUsername(transfer.getSenderUsername());
         int receiverId = userDao.findIdByUsername(transfer.getReceiverUsername());
 
-        if (senderBalance > 0 && transfer.getTransferAmount() <= senderBalance && !transfer.getSenderUsername().equals(transfer.getReceiverUsername())) {
+        if (transfer.getTransferAmount() > 0 && transfer.getTransferAmount() <= senderBalance
+                && !transfer.getSenderUsername().equals(transfer.getReceiverUsername())) {
             String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
             jdbcTemplate.update(sql, senderBalance - transfer.getTransferAmount(), senderId);
             jdbcTemplate.update(sql, receiverBalance + transfer.getTransferAmount(), receiverId);

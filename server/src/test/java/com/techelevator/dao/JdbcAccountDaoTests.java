@@ -20,7 +20,9 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
     private JdbcAccountDao sut;
     private UserAccount testUser;
     private Transfer testTransfer;
-    private Transfer failedTransfer;
+    private Transfer failedTransfer1;
+    private Transfer failedTransfer2;
+    private Transfer failedTransfer3;
     private Transfer testTransfer2;
     private Transfer listTransfer;
     private JdbcTemplate jdbcTemplate;
@@ -35,7 +37,9 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         testUser = new UserAccount(1002, "nicholas");
         testTransfer = new Transfer(3002, "nix", "nicholas", 500.00);
         testTransfer2 = new Transfer(3012,"nicholas","nix",200.00);
-        failedTransfer = new Transfer(3011,"caroline","nicholas",20.00);
+        failedTransfer1 = new Transfer(3011,"user","user",400.00);
+        failedTransfer2 = new Transfer(3013,"adam","viviana",-5.00);
+        failedTransfer3 = new Transfer(3014,"caroline","nicholas",20.00);
         listTransfer = new Transfer(3008,"nicholas","nix",9.00);
     }
 
@@ -79,18 +83,20 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void transferBucks_does_not_update_balance_if_sent_to_same_user() {
-        Transfer newTransfer = sut.transferBucks(failedTransfer);
-        Assert.assertNull(newTransfer);
+        Transfer newTransfer = sut.transferBucks(failedTransfer1);
+        Assert.assertNull(sut.findTransferById(newTransfer.getTransferId()));
     }
 
     @Test
     public void transferBucks_does_not_update_balance_if_transfer_amount_is_less_than_zero() {
-        Assert.fail();
+        Transfer newTransfer = sut.transferBucks(failedTransfer2);
+        Assert.assertNull(sut.findTransferById(newTransfer.getTransferId()));
     }
 
     @Test
     public void transferBucks_does_not_update_balance_if_sender_balance_is_too_low() {
-        Assert.fail();
+        Transfer newTransfer = sut.transferBucks(failedTransfer3);
+        Assert.assertNull(sut.findTransferById(newTransfer.getTransferId()));
     }
 
     @Test
@@ -105,7 +111,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void findTransfers_returns_correct_list_of_transfers_for_user() {
-        List<Transfer> transfers = sut.findTransfers(1001);
+        List<Transfer> transfers = sut.findTransfers(1002);
         Assert.assertEquals(1, transfers.size());
         assertTransfersMatch(listTransfer, transfers.get(0));
     }
