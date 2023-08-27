@@ -33,8 +33,6 @@ public class AccountController {
         this.userDao = userDao;
     }
 
-
-
     @RequestMapping(path = "/accountbalance", method = RequestMethod.GET)
     public UserAccount getUserAccountNameAndBalance(Principal principal) {
         String username = principal.getName();
@@ -53,6 +51,10 @@ public class AccountController {
 
         if (transfer.getTransferAmount() <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send 0 or a negative amount");
+        } else if (transfer.getTransferAmount() > accountDao.getAccountBalance(transfer.getSenderUsername()).getBalance()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough funds");
+        } else if (transfer.getSenderUsername().equals(transfer.getReceiverUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send funds to yourself");
         }
 
         return accountDao.transferBucks(transfer);
